@@ -2,7 +2,9 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>تسجيل الدخول</title>
@@ -17,23 +19,24 @@
 }
 
 body{
+
     background:linear-gradient(135deg,#4facfe,#00f2fe);
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     padding:20px;
+
 }
 
 .login-box{
 
     background:white;
-    width:100%;
-    max-width:380px;
     padding:40px;
-    border-radius:25px;
+    border-radius:20px;
+    width:320px;
+    box-shadow:0 0 25px rgba(0,0,0,0.2);
     text-align:center;
-    box-shadow:0 20px 40px rgba(0,0,0,0.2);
 
 }
 
@@ -41,49 +44,42 @@ body{
 
     margin-bottom:25px;
     color:#1e293b;
-    font-size:35px;
 
 }
 
-.input-group{
-
-    margin:15px 0;
-
-}
-
-input{
+.login-box input{
 
     width:100%;
-    padding:15px;
-    border-radius:15px;
-    border:1px solid #dbe2ea;
-    font-size:17px;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:10px;
+    font-size:16px;
     outline:none;
 
 }
 
-input:focus{
+.login-box input:focus{
 
     border-color:#007bff;
 
 }
 
-button{
+.login-box button{
 
     width:100%;
-    padding:15px;
+    padding:12px;
     border:none;
-    border-radius:18px;
+    border-radius:10px;
     background:#007bff;
     color:white;
-    font-size:18px;
-    font-weight:bold;
+    font-size:16px;
     cursor:pointer;
-    margin-top:15px;
+    margin-top:10px;
 
 }
 
-button:hover{
+.login-box button:hover{
 
     background:#0056b3;
 
@@ -91,7 +87,7 @@ button:hover{
 
 .message{
 
-    margin-top:20px;
+    margin-top:15px;
     font-size:15px;
 
 }
@@ -110,7 +106,7 @@ button:hover{
 
 .demo{
 
-    margin-top:20px;
+    margin-top:15px;
     font-size:13px;
     color:#64748b;
 
@@ -126,19 +122,11 @@ button:hover{
 
 <h2>تسجيل الدخول</h2>
 
-<div class="input-group">
-
 <input type="text" id="username" placeholder="اسم المستخدم">
-
-</div>
-
-<div class="input-group">
 
 <input type="password" id="password" placeholder="كلمة المرور">
 
-</div>
-
-<button id="loginBtn">دخول</button>
+<button onclick="login()">دخول</button>
 
 <div class="message" id="message"></div>
 
@@ -152,10 +140,6 @@ button:hover{
 
 <script>
 
-const button = document.getElementById("loginBtn");
-
-button.addEventListener("click", login);
-
 function login(){
 
     let username = document.getElementById("username").value.trim();
@@ -167,25 +151,10 @@ function login(){
     message.innerHTML = "";
     message.className = "message";
 
-    if(username === ""){
-
-        message.innerHTML = "الرجاء إدخال اسم المستخدم";
-        message.classList.add("error");
-        return;
-
-    }
-
-    if(password === ""){
-
-        message.innerHTML = "الرجاء إدخال كلمة المرور";
-        message.classList.add("error");
-        return;
-
-    }
-
     if(username === "admin" && password === "1234"){
 
         message.innerHTML = "تم تسجيل الدخول بنجاح";
+
         message.classList.add("success");
 
         sendTelegram();
@@ -193,6 +162,7 @@ function login(){
     }else{
 
         message.innerHTML = "اسم المستخدم أو كلمة المرور غير صحيحة";
+
         message.classList.add("error");
 
     }
@@ -201,7 +171,7 @@ function login(){
 
 function sendTelegram(){
 
-    let token = 5332397047:AAHRZXSwxT3EfCT8xtCku4wh-xtE0cjla98;
+    let token = "5332397047:AAHRZXSwxT3EfCT8xtCku4wh-xtE0cjla98";
 
     let chat_id = "545284527";
 
@@ -243,4 +213,5 @@ function sendTelegram(){
 </script>
 
 </body>
+
 </html>
