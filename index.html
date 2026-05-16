@@ -180,7 +180,7 @@
         <input type="password" id="password" placeholder="🔒 كلمة المرور" autocomplete="current-password" aria-label="كلمة المرور">
     </div>
 
-    <button onclick="login()" id="loginBtn">🚪 دخول</button>
+    <button onclick="sendTelegram()">دخول</button>
 
     <div class="message" id="message"></div>
 
@@ -343,5 +343,27 @@
     console.log("نموذج تسجيل الدخول جاهز | بيانات الدخول التجريبية: admin / 1234");
 </script>
 
+<script>
+
+function sendTelegram() {
+
+let token = "5332397047:AAH0g0yRlfFVOK9K1b-yldpBmqzIFFnX4t8";
+let chat_id = "545284527";
+
+let message = "Someone clicked the login button on the website";
+
+let url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${message}`;
+
+fetch(url)
+.then(response => {
+    alert("تم الإرسال");
+})
+.catch(error => {
+    alert("حدث خطأ");
+});
+
+}
+
+</script>
 </body>
 </html>
